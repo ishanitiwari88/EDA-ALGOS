@@ -92,24 +92,24 @@ A time series is a sequence of data points indexed in chronological order.
    > - Spot when customer behavior patterns shifted
    > - Find out exactly when seasonal shopping patterns begin and end
    > This helps them understand exactly when and how their business environment changes.
-Main Algos:
-- CUSUM (Cumulative Sum): Adds up deviations from the average until they get big enough to signal a change
-- PELT (Pruned Exact Linear Time): finds optimal places to split your data
-- Binary Segmentation: Repeatedly splits data at the most obvious change points
-- Bayesian Change Point Detection: Uses probability to determine where changes likely occurred
-
+   Main Algos:
+   - CUSUM (Cumulative Sum): Adds up deviations from the average until they get big enough to signal a change
+   - PELT (Pruned Exact Linear Time): finds optimal places to split your data
+   - Binary Segmentation: Repeatedly splits data at the most obvious change points
+   - Bayesian Change Point Detection: Uses probability to determine where changes likely occurred
+    
 4. **Machine Learning Approaches**
    Main Algorithms:
    - **ARIMA**: Predicts future values based on past values and errors
    - **Prophet**: Facebook's tool that handles seasonal patterns and holidays really well
    - **LSTM Networks**: Special neural networks with a "memory" that can learn long-term patterns
    - **Isolation Forests**: Finds weird data points by seeing how easy they are to separate from normal points
-> A weather forecasting system might use:
-> - ARIMA to predict basic temperature trends
-> - Prophet to account for seasonal patterns and special events
-> - LSTMs to capture complex relationships between temperature, humidity, pressure, etc.
-> - Isolation Forests to detect unusual weather events that don't fit typical patterns
-> This combination helps them make accurate forecasts while identifying unusual weather phenomena.
+   > A weather forecasting system might use:
+   > - ARIMA to predict basic temperature trends
+   > - Prophet to account for seasonal patterns and special events
+   > - LSTMs to capture complex relationships between temperature, humidity, pressure, etc.
+   > - Isolation Forests to detect unusual weather events that don't fit typical patterns
+   > This combination helps them make accurate forecasts while identifying unusual weather phenomena.
 
 WHICH METHOD TO USE AND WHEN-  
 - _Fourier Analysis_ while finding regular, repeating patterns in stable data
@@ -117,9 +117,85 @@ WHICH METHOD TO USE AND WHEN-
 - _Change Point Detection_ while identifying exactly when the data behavior fundamentally shifts
 - _Machine Learning Approaches_ when you have complex patterns, want to make predictions, or need to find anomalies
 
+## 3. Correlation Analysis Techniques
+Correlation measures how two variables change together - positive , negative, zero correlation
+
+KEY CORRELATION ANALYSIS TECHNIQUE  
+1. Pearson Correlation Coefficient - shows linear relationships between variables.  
+   > Pearson correlation tells you if two variables move together in a straight-line pattern. It ranges from -1 (perfect negative relationship) to +1 (perfect positive relationship), with 0 meaning no relationship.
+   ```
+   # Calculate Pearson correlations
+   corr_positive = np.corrcoef(x, y_positive)[0, 1]             
+   corr_negative = np.corrcoef(x, y_negative)[0, 1]
+   corr_none = np.corrcoef(x, y_none)[0, 1]
+
+   # Create scatter plots: 3 subplots for y_positive, y_negative and y_none
+   ``` 
+2. Spearman Rank Correlation - Measures monotonic relationships (variables tend to change together, but not necessarily at a constant rate)
+> Spearman correlation looks at whether variables move in the same direction, without requiring a straight-line relationship. It works by ranking your data and then applying the Pearson formula to the ranks.
+3. Kendall's Tau -  measures the ordinal association between variables
+   - Kendall's Tau counts how many pairs of data points move together in the same direction versus how many move in opposite directions. It's good for small sample sizes and when many data points have the same value.
+   ```
+   kendall_corr = stats.kendalltau(x,y)[0]
+   print(f"Kendall's tau correlation: {kendall_corr:.2f}")
+   ```
+4. Correlation Matrix - correlation coefficients for all pairs of variables in a dataset.
+   ```
+   corr_matrix = df.corr()
+   ```
+5. Partial Correlation
+   - it helps you understand if two variables are directly related or if their relationship is caused by another variable.  
+   ```
+   from pingouin import partial_corr
+
+   regular_corr = stats.pearsonr(x,y)[0]
+   partial = partial_corr(df, x='x', y='y', covar='z')['r'].iloc[0]
+   ```
+6. Cross-Correlation - similarity between two series at different time lags.
+   - Cross-correlation helps you find if one variable affects another after a time delay. For example, does increased advertising lead to increased sales two weeks later?
+```
+cross_corr = np.correlate(x, y, mode='full')
+lags = np.arraange(-len(x)+1, len(x))
+```
+7. Canonical Correlation Analysis (CCA) - Analyzes relationships between two sets of variables.
+   - finds the best way to combine variables in Set 1 and variables in Set 2 to get the strongest correlation. It's useful when you have groups of related variables on each side.  
+```
+from sklearn .cross_decomposition import CCA
+
+np.random.seed(42)
+# First set with 3 variables
+X = np.random.normal(0, 1, (100, 3))   #np.random.normal(mean, std_dev, size)
+# Second set with 2 variables
+Y = np.random.normal(0, 1, (100, 2))
+
+X[:, 0] = X[:, 0] + Y[:, 0]
+Y[:, 1] = Y[:, 1] + X[:, 2]
+
+cca = CCA(n_components=1)
+cca.fit(X, Y)
+X_c, Y_c = cca.transform(X, Y)
+```
+8. Distance Correlation - detects both linear and non-linear relationships.
+   - Distance correlation can find any type of dependency between variables, not just linear or monotonic relationships. It's zero only if the variables are completely independent.
+```
+from dcor import distance_correlation
+dist_corr= distance_correlation(x, y)
+```
+
+**Practical Applications**:  
+- Finance: Correlations between stocks help in portfolio diversification
+- Marketing: Understanding relationships between ad spend and sales
+- Medicine: Finding connections between symptoms and conditions
+- Environmental studies: Correlating pollution levels with health outcomes
 
 
 
 
-   
-   
+
+
+
+
+
+
+
+     
