@@ -189,13 +189,40 @@ dist_corr= distance_correlation(x, y)
 - Environmental studies: Correlating pollution levels with health outcomes
 
 
+## 4. Dimensionality Reduction Algorithm - Principal Component Analysis (PCA)
+PCA is one of the most widely used dimensionality reduction techniques in data science. It reduces like hundreds of dimension into few components that still tell the story of the whole variety.
+- Datasets can have lots of columns (features), which makes it hard to see patterns.
+- PCA helps us simplify the data, remove noise, and visualize it better.
+- It's like zooming out on a huge, messy painting to see the big picture.
+- PCA works best when data is centered (mean = 0).
 
+**_HOW PCA WORKS_**
+1. Standardize the data:  
+Make sure all features (columns) are on the same scale. We do this so that no feature unfairly dominates just because it has bigger numbers. Make everything have a mean of 0 and a standard deviation of 1.
 
+2. Find how features move together:  
+Create a covariance matrix. This tells us which features are changing together. If two features are closely related, the matrix will show that.
 
+3. Find the main directions of the data:  
+Figure out the best directions that show the most variation in the data. These directions are called eigenvectors. also, find out how important each one is — using numbers called eigenvalues.
 
+4. Pick the most important directions:  
+Sort the directions by their importance (eigenvalues) and pick the top ones. These gives the best summary of the original data. Selecting these top n eigenvectors forms a projection matrix.
 
+5. Create a new set of features
+Transform the original data using this projection matrix. This gives us a new version of the data with fewer features, but still capturing most of the information.
 
+**PRACTICAL AAPLICATIONS OF PCA IN DATA SCIENCE**
+- Image Compression
+- Noise Reduction - Useful in signal processing, time series analysis, etc
+- Feature Engineering - Creating uncorrelated features for ML models
+- Anomaly Detection - dentifying unusual patterns or outliers (that might indicate fraud or system failures)
+- Data Visualization - Converting HD data to 2D/3D for visualization (essential for communicating patterns in complex datasets)
 
-
+**LIMITATIONS**
+- Cannot capture nonlinear relationships
+- Features must be standardized before PCA
+- Principal components can be hard to interpret
+- Assumes orthogonal axes - May not align with actual data structure
 
      
